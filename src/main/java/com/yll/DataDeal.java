@@ -1,6 +1,5 @@
 package com.yll;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +11,8 @@ import java.util.Map;
  *@创建时间: 2025/3/18 22:42
  **/
 public class DataDeal {
+
+	private DataDeal(){}
 
 	private static GameData gameData = new GameData();
 

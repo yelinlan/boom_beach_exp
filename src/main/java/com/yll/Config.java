@@ -4,10 +4,8 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
 import lombok.Data;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -22,7 +20,7 @@ import java.util.stream.IntStream;
 @Data
 public class Config implements Serializable {
 
-	private static final String path = System.getProperty("user.dir")+"\\config.txt";
+	private static final String PATH = System.getProperty("user.dir")+"\\config.txt";
 	private Map<String, String> buildings = new LinkedHashMap<>();
 	private Map<String, String> research = new LinkedHashMap<>();
 	private Map<String, String> other = new LinkedHashMap<>();
@@ -35,7 +33,7 @@ public class Config implements Serializable {
 	 */
 	void saveTemplate(GameData gameData) {
 	    // 检查文件是否存在，如果存在则直接返回，无需执行后续操作
-	    if (FileUtil.exist(path)) {
+	    if (FileUtil.exist(PATH)) {
 	        return;
 	    }
 
@@ -56,7 +54,7 @@ public class Config implements Serializable {
 	    gameData.getResearchMap().keySet().forEach(k -> research.put(k, "0"));
 
 	    // 将当前游戏数据对象转换为JSON字符串并写入文件
-	    FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(this), Config.path);
+	    FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(this), Config.PATH);
 	}
 
 	/**
@@ -67,7 +65,7 @@ public class Config implements Serializable {
 	 * @return Config对象，包含从配置文件中读取的配置信息
 	 */
 	public static Config loadConfig() {
-		return JSONUtil.toBean(FileUtil.readUtf8String(path), Config.class);
+		return JSONUtil.toBean(FileUtil.readUtf8String(PATH), Config.class);
 	}
 
 
