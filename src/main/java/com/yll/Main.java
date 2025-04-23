@@ -107,7 +107,13 @@ public class Main {
 					return;
 				}
 				// 获取升级所需经验和时间
-				int jy = Integer.parseInt(bu.get("经验").get(upLevel).toString());
+				int jy;
+				try {
+					jy = Integer.parseInt(bu.get("经验").get(upLevel).toString());
+				} catch (Exception e) {
+					System.out.println(bu);
+					continue;
+				}
 				double t = parseTimeToHours(
 						Optional.ofNullable(bu.get("升级时间")).orElse(bu.get("研究时间")).get(upLevel).toString());
 				// 创建一个结果对象，存储计算结果
@@ -139,7 +145,7 @@ public class Main {
 	 */
 	private static void printData(List<Result> list, GameData gameData, int level) {
 		// 对结果列表按照收益比降序排序
-		list = list.stream().sorted(Comparator.comparing(Result::getRatio).reversed().thenComparing(Result::getTime))
+		list = list.stream().sorted(Comparator.comparing(Result::getTime).reversed().thenComparing(Result::getRatio).reversed())
 				.toList();
 		// 计算累计经验和总时间
 		int sumExp = Integer.parseInt(gameData.getConfig().getOther().get("exp"));
