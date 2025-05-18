@@ -24,10 +24,8 @@ public class Result {
 
 	@Override
 	public String toString() {
-		double h = Double.parseDouble(NumberUtil.decimalFormat("#.0", totalTime));
-		double d = Double.parseDouble(NumberUtil.decimalFormat("#.0", totalTime/24));
 		return name + "：" + level + "->"+(level+1)+ "（ max：" + currentMaxLevel +"） exp："+ exp + " ratio：" + ratio + " sumExp："
-				+ sum +" totalTime:"+ (h >24? d+"d" :h +"h")
+				+ sum +" totalTime:"+  DataUtil.formatTime(totalTime)
 				+"  spend:"+time+"h";
 	}
 }

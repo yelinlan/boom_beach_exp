@@ -107,13 +107,7 @@ public class Main {
 					return;
 				}
 				// 获取升级所需经验和时间
-				int jy;
-				try {
-					jy = Integer.parseInt(bu.get("经验").get(upLevel).toString());
-				} catch (Exception e) {
-					System.out.println(bu);
-					continue;
-				}
+				int jy = Integer.parseInt(bu.get("经验").get(upLevel).toString());
 				double t = parseTimeToHours(
 						Optional.ofNullable(bu.get("升级时间")).orElse(bu.get("研究时间")).get(upLevel).toString());
 				// 创建一个结果对象，存储计算结果
@@ -145,11 +139,12 @@ public class Main {
 	 */
 	private static void printData(List<Result> list, GameData gameData, int level) {
 		// 对结果列表按照收益比降序排序
-		list = list.stream().sorted(Comparator.comparing(Result::getTime).reversed().thenComparing(Result::getRatio).reversed())
+		list = list.stream().sorted(Comparator.comparing(Result::getRatio).reversed().thenComparing(Result::getTime))
 				.toList();
 		// 计算累计经验和总时间
 		int sumExp = Integer.parseInt(gameData.getConfig().getOther().get("exp"));
 		int playerLevel = Integer.parseInt(gameData.getConfig().getOther().get("player"));
+		double lastSpend = 0;
 		for (int i = 0; i < list.size(); i++) {
 			int exp = Integer.parseInt(gameData.getPlayer1().get("经验").get(playerLevel - 1).toString());
 			if (i == 0) {
@@ -164,12 +159,15 @@ public class Main {
 			if (sumExp > exp) {
 				sumExp -= exp;
 				System.out.println(
-						"玩家升级了！！！  " + playerLevel + "--->" + (playerLevel + 1) + "，剩余" + sumExp + "经验");
+						"玩家升级了！！！  " + playerLevel + "--->" + (playerLevel + 1) + "，剩余" + sumExp + "经验"
+								+ "，阶段耗时：" + DataUtil.formatTime(list.get(i).getTotalTime() - lastSpend));
+				lastSpend = list.get(i).getTotalTime();
 				playerLevel++;
 			}
 		}
 		System.out.println(
-				"在当前司令部等级：" + level + "下,玩家能够升级到" + playerLevel + "级，剩余" + sumExp + "经验");
+				"在当前司令部等级：" + level + "下,玩家能够升级到" + playerLevel + "级，剩余" + sumExp + "经验" + "，阶段耗时："
+						+ DataUtil.formatTime(list.get(list.size() - 1).getTotalTime() - lastSpend));
 		System.out.println("Press enter!");
 		Scanner scanner = new Scanner(System.in);
 		scanner.nextLine();
