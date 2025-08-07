@@ -1,8 +1,10 @@
 package com.yll;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.NumberUtil;
 
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -160,14 +162,18 @@ public class Main {
 				sumExp -= exp;
 				System.out.println(
 						"玩家升级了！！！  " + playerLevel + "--->" + (playerLevel + 1) + "，剩余" + sumExp + "经验"
-								+ "，阶段耗时：" + DataUtil.formatTime(list.get(i).getTotalTime() - lastSpend));
+								+ "，阶段耗时：" + DataUtil.formatTime(list.get(i).getTotalTime() - lastSpend) + " 日期："
+								+ LocalDateTimeUtil.now().plusHours((long) list.get(i).getTotalTime()/2)
+								.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 				lastSpend = list.get(i).getTotalTime();
 				playerLevel++;
 			}
 		}
 		System.out.println(
 				"在当前司令部等级：" + level + "下,玩家能够升级到" + playerLevel + "级，剩余" + sumExp + "经验" + "，阶段耗时："
-						+ DataUtil.formatTime(list.get(list.size() - 1).getTotalTime() - lastSpend));
+						+ DataUtil.formatTime(list.get(list.size() - 1).getTotalTime() - lastSpend) + " 日期："
+						+ LocalDateTimeUtil.now().plusHours((long) (list.get(list.size() - 1).getTotalTime()/2))
+						.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 		System.out.println("Press enter!");
 		Scanner scanner = new Scanner(System.in);
 		scanner.nextLine();
