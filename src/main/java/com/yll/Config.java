@@ -20,9 +20,12 @@ import java.util.stream.IntStream;
 @Data
 public class Config implements Serializable {
 
-	private static final String PATH = System.getProperty("user.dir")+"\\config.txt";
+	private static final String PATH = System.getProperty("user.dir") + "\\config.txt";
+
 	private Map<String, String> buildings = new LinkedHashMap<>();
+
 	private Map<String, String> research = new LinkedHashMap<>();
+
 	private Map<String, String> other = new LinkedHashMap<>();
 
 	/**
@@ -32,29 +35,30 @@ public class Config implements Serializable {
 	 * @param gameData 游戏数据对象，包含建筑物地图、研究地图等信息
 	 */
 	void saveTemplate(GameData gameData) {
-	    // 检查文件是否存在，如果存在则直接返回，无需执行后续操作
-	    if (FileUtil.exist(PATH)) {
-	        return;
-	    }
+		// 检查文件是否存在，如果存在则直接返回，无需执行后续操作
+		if (FileUtil.exist(PATH)) {
+			return;
+		}
 
-	    // 遍历建筑物地图的键集，对于每个建筑物类型，获取其对应的数量信息，并构建初始状态字符串
-	    gameData.getBuildingMap().keySet().forEach(k -> gameData.getAmount().forEach((k1, v1) -> {
-	        if (k1.equals(k)) {
-	            int len = Integer.parseInt(v1.get(v1.size() - 1).toString());
-	            buildings.put(k, IntStream.range(0, len).mapToObj(i -> "0").collect(Collectors.joining(",")));
-	        }
-	    }));
+		// 遍历建筑物地图的键集，对于每个建筑物类型，获取其对应的数量信息，并构建初始状态字符串
+		gameData.getBuildingMap().keySet().forEach(k -> gameData.getAmount().forEach((k1, v1) -> {
+			if (k1.equals(k)) {
+				int len = Integer.parseInt(v1.get(v1.size() - 1).toString());
+				buildings.put(k, IntStream.range(0, len).mapToObj(i -> "0").collect(Collectors.joining(",")));
+			}
+		}));
 
-	    // 初始化其他游戏数据，如等级、经验等
-	    other.put("level", "0");
-	    other.put("exp", "0");
-	    other.put("player", "0");
+		// 初始化其他游戏数据，如等级、经验等
+		other.put("level", "1");
+		other.put("exp", "0");
+		other.put("player", "1");
+		buildings.put("战舰", "1");
 
-	    // 遍历研究地图的键集，初始化所有研究项目的等级为0
-	    gameData.getResearchMap().keySet().forEach(k -> research.put(k, "0"));
+		// 遍历研究地图的键集，初始化所有研究项目的等级为0
+		gameData.getResearchMap().keySet().forEach(k -> research.put(k, "1"));
 
-	    // 将当前游戏数据对象转换为JSON字符串并写入文件
-	    FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(this), Config.PATH);
+		// 将当前游戏数据对象转换为JSON字符串并写入文件
+		FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(this), Config.PATH);
 	}
 
 	/**
@@ -67,6 +71,5 @@ public class Config implements Serializable {
 	public static Config loadConfig() {
 		return JSONUtil.toBean(FileUtil.readUtf8String(PATH), Config.class);
 	}
-
 
 }

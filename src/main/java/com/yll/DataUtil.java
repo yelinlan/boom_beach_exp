@@ -27,13 +27,18 @@ public class DataUtil {
 	}
 
 	private static final String PLAYER = "等级 经验 进攻成本 1 4 100 2 5 140 3 6 180 4 16 240 5 27 280 6 38 290 7 45 310 8 63 360 9 81 390 10 109 410 11 119 480 12 129 510 13 129 550 14 139 620 15 149 660 16 197 700 17 222 870 18 247 940 19 249 1000 20 272 1300 21 295 1400 22 295 1500 23 318 1800 24 341 1900 25 365 2100 26 412 2500 27 459 2700 28 462 2900 29 512 3400 30 562 3600 31 731 3900 32 758 4400 33 785 4700 34 785 5000 35 812 5500 36 839 5800 37 855 6000 38 899 6800 39 943 7200 40 1223 7600 41 1236 8400 42 1249 8800 43 1198 9200 44 1211 10000 45 1224 11000 46 2014 11000 47 2233 13000 48 2452 13000 49 1746 14000 50 1796 15000 51 1846 16000 52 1677 17000 53 1696 18000 54 1715 19000 55 1715 19000 56 1734 20000 57 1753 20000 58 1761 20000 59 1788 20000 60 1815 20000 61 3000 20000 62 3000 20000 63 3000 20000 64 3000 20000 65 3000 20000 66 3000 20000 67 3000 20000 68 3000 20000 69 3000 20000 70 3000 20000 71 3000 20000 72 3000 20000 73 3000 20000 74 3000 20000 75 3000 20000 76 3000 20000 77 3000 20000 78 3000 20000 79 3000 20000 80 3000 20000";
-	public static final String DATA_PATH = System.getProperty("user.dir") + "\\unitMap.txt";
-	public static final String TEXT = System.getProperty("user.dir") + "\\text\\";
-	public static final String URL = "https://bb.heiyu100.cn/shuju192.html";
-	public static final String HOME_URL = "https://bb.heiyu100.cn/shuju.aspx";
-	public static final String COMMON_PREFIX = "shuju";
-	public static final String COMMON_SUFFIX = "html";
 
+	public static final String DATA_PATH = System.getProperty("user.dir") + "\\unitMap.txt";
+
+	public static final String TEXT = System.getProperty("user.dir") + "\\text\\";
+
+	public static final String URL = "https://bb.heiyu100.cn/shuju192.html";
+
+	public static final String HOME_URL = "https://bb.heiyu100.cn/shuju.aspx";
+
+	public static final String COMMON_PREFIX = "shuju";
+
+	public static final String COMMON_SUFFIX = "html";
 
 	/**
 	 * 加载数据方法
@@ -78,7 +83,12 @@ public class DataUtil {
 		if (!FileUtil.exist(TEXT)) {
 			System.out.println("解析成文本");
 			temp = toText();
-			temp.forEach((k, v) -> FileUtil.writeUtf8String(v, TEXT + k + ".txt"));
+			temp.forEach((k, v) -> {
+				if (k.equals("驻军碉堡")) {
+					k = "地堡";
+				}
+				FileUtil.writeUtf8String(v, TEXT + k + ".txt");
+			});
 		} else {
 			System.out.println("加载已解析文本");
 			temp = Arrays.stream(FileUtil.ls(TEXT)).collect(
@@ -119,7 +129,7 @@ public class DataUtil {
 			kv.put("木材,石材,钢材", "升级费用");
 			kv.put("木材,钢材", "升级费用");
 			kv.put("木材,石材", "升级费用");
-			//特殊处理
+			// 特殊处理
 			kv.forEach((k1, v1) -> {
 				if (keyStr[0].contains(k1) && keyStr[0].contains(v1)) {
 					keyStr[0] = keyStr[0].replace(k1, "");

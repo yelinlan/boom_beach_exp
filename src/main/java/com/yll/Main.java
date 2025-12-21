@@ -1,5 +1,6 @@
 package com.yll;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -109,7 +110,14 @@ public class Main {
 					return;
 				}
 				// 获取升级所需经验和时间
-				int jy = Integer.parseInt(bu.get("经验").get(upLevel).toString());
+				int jy = 0;
+				try {
+					jy = Integer.parseInt(bu.get("经验").get(upLevel).toString());
+				} catch (NumberFormatException e) {
+					continue;
+				} catch (Exception e){
+					continue;
+				}
 				double t = parseTimeToHours(
 						Optional.ofNullable(bu.get("升级时间")).orElse(bu.get("研究时间")).get(upLevel).toString());
 				// 创建一个结果对象，存储计算结果
@@ -128,7 +136,6 @@ public class Main {
 		// 返回结果列表
 		return list;
 	}
-
 
 	/**
 	 * 打印数据方法，根据结果列表、游戏数据和玩家等级来展示游戏信息
@@ -163,17 +170,21 @@ public class Main {
 				System.out.println(
 						"玩家升级了！！！  " + playerLevel + "--->" + (playerLevel + 1) + "，剩余" + sumExp + "经验"
 								+ "，阶段耗时：" + DataUtil.formatTime(list.get(i).getTotalTime() - lastSpend) + " 日期："
-								+ LocalDateTimeUtil.now().plusHours((long) list.get(i).getTotalTime()/2)
+								+ LocalDateTimeUtil.now().plusHours((long) list.get(i).getTotalTime() / 2)
 								.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 				lastSpend = list.get(i).getTotalTime();
 				playerLevel++;
 			}
 		}
-		System.out.println(
-				"在当前司令部等级：" + level + "下,玩家能够升级到" + playerLevel + "级，剩余" + sumExp + "经验" + "，阶段耗时："
-						+ DataUtil.formatTime(list.get(list.size() - 1).getTotalTime() - lastSpend) + " 日期："
-						+ LocalDateTimeUtil.now().plusHours((long) (list.get(list.size() - 1).getTotalTime()/2))
-						.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+		if (CollUtil.isNotEmpty(list)){
+			System.out.println(
+					"在当前司令部等级：" + level + "下,玩家能够升级到" + playerLevel + "级，剩余" + sumExp + "经验" + "，阶段耗时："
+							+ DataUtil.formatTime(list.get(list.size() - 1).getTotalTime() - lastSpend) + " 日期："
+							+ LocalDateTimeUtil.now().plusHours((long) (list.get(list.size() - 1).getTotalTime() / 2))
+							.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+		}else {
+			System.out.println("没有可升级的研究项目！");
+		}
 		System.out.println("Press enter!");
 		Scanner scanner = new Scanner(System.in);
 		scanner.nextLine();
@@ -255,4 +266,5 @@ public class Main {
 		// 将所有时间单位转换为小时并累加返回
 		return days * 24 + hours + minutes / 60.0 + seconds / 3600.0;
 	}
+
 }
